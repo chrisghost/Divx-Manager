@@ -1,6 +1,6 @@
 @(path : String, quality: String)
 <video id="video" autoplay preload controls>
+  <source src="/api/preview/webm/@quality/@path" type='video/webm; codecs="vp8.0, vorbis"'/>
   <source src="/api/preview/ogg/@quality/@path" type="video/ogg; codecs=theora"/>
   <source src="/api/preview/mp4/@quality/@path" type='video/mp4; codecs="avc1.4D401E, mp4a.40.2"'/>
-  <source src="/api/preview/webm/@quality/@path" type='video/webm; codecs="vp8.0, vorbis"'/>
 </video>

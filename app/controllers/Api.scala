@@ -98,9 +98,9 @@ object Api extends Controller {
     Ok.sendFile(new java.io.File(baseDir + path))
   }
 
-  def videoPlayer(path: String) = Action { implicit request => 
+  def videoPlayer(path: String, quality: String) = Action { implicit request =>
     if (!Identity.isFolderAuthorized(path)) Unauthorized
-    Ok(views.html.videoPlayer(path, "vga"))
+    Ok(views.html.videoPlayer(path, quality))
   }
 
   def getFile(path: String) = new java.io.File(baseDir + path)

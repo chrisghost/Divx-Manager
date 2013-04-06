@@ -62,8 +62,8 @@ function loadTop10() {
 	});
 }
 
-function loadPlayer(path, destination) {
-	$.get("/api/videoPlayer/"+path, function(player) {
+function loadPlayer(path, quality, destination) {
+	$.get("/api/videoPlayer/"+quality+"/"+path, function(player) {
 		$(destination).html(player);
 	});
 }
@@ -84,7 +84,15 @@ function addFile($base, e) {
 	html += "</td>";
 
 	html += "<td>";
-    html += "<a class='preview icon-play' link='"+e.path+"' href='#'></a>";
+html += "    <div class='btn-group'>"+
+"        <a class='dropdown-toggle icon-play' data-toggle='dropdown' href='#'>"+
+"        </a>"+
+"        <ul class='dropdown-menu' data-link='"+e.path+"'>"+
+"            <li><a class='preview' data-quality='vga'>vga</a></li>"+
+"            <li><a class='preview' data-quality='wvga'>wvga</a></li>"+
+"            <li><a class='preview' data-quality='hd720'>hd720</a></li>"+
+"        </ul>"+
+"    </div>";
 	html += "</td>";
 
 	// Nom
@@ -178,10 +186,11 @@ function initOpenDirAction() {
 	});
 	$("#list-body").on('click', ".preview", function(e) {
         e.preventDefault();
-        var dir = $(this).attr("link");
+        var dir = "/"+$(this).parent().parent().data("link");
+        var quality = $(this).data("quality");
         var eId = Math.floor(Math.random()*100000);
-        $(this).parent().next().append("<div id='"+eId+"'></div>");
-        loadPlayer(dir, $("#"+eId));
+        $(this).parent().parent().parent().parent().next().append("<div id='"+eId+"'></div>");
+        loadPlayer(dir, quality, $("#"+eId));
     });
 }
 
