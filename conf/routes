@@ -15,6 +15,9 @@ GET     /api/roots					controllers.Api.roots
 
 GET     /api/download*file          controllers.Api.download(file)
 
+GET     /api/videoPlayer*file       controllers.Api.videoPlayer(file)
+GET     /api/preview/:format/:quality/*file       controllers.Streamer.view(format, quality, file)
+
 GET     /api/newFiles               controllers.Api.newFiles
 
 GET     /api/public/listing*path    controllers.Api.rawListing(path)

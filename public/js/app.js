@@ -62,6 +62,12 @@ function loadTop10() {
 	});
 }
 
+function loadPlayer(path, destination) {
+	$.get("/api/videoPlayer/"+path, function(player) {
+		$(destination).html(player);
+	});
+}
+
 function addFile($base, e) {
 	var html = "<tr>";
 	var lien = "";
@@ -75,6 +81,10 @@ function addFile($base, e) {
 	// Icone
 	html += "<td>";
 	html += getIcone(e);
+	html += "</td>";
+
+	html += "<td>";
+    html += "<a class='preview icon-play' link='"+e.path+"' href='#'></a>";
 	html += "</td>";
 
 	// Nom
@@ -166,6 +176,13 @@ function initOpenDirAction() {
 		}, this);
 		load(dir, 'files', success);
 	});
+	$("#list-body").on('click', ".preview", function(e) {
+        e.preventDefault();
+        var dir = $(this).attr("link");
+        var eId = Math.floor(Math.random()*100000);
+        $(this).parent().next().append("<div id='"+eId+"'></div>");
+        loadPlayer(dir, $("#"+eId));
+    });
 }
 
 function initReorderLinks() {

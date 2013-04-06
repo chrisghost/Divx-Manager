@@ -98,6 +98,13 @@ object Api extends Controller {
     Ok.sendFile(new java.io.File(baseDir + path))
   }
 
+  def videoPlayer(path: String) = Action { implicit request => 
+    if (!Identity.isFolderAuthorized(path)) Unauthorized
+    Ok(views.html.videoPlayer(path, "vga"))
+  }
+
+  def getFile(path: String) = new java.io.File(baseDir + path)
+
   def newFiles = Action { implicit request =>
     Identity.get.map { identity =>
       val json = Cache.getOrElse("top10-"+identity.name, timeout) {

@@ -11,6 +11,7 @@ object ApplicationBuild extends Build {
     "com.github.scala-incubator.io" % "scala-io_2.10.0-RC1" % "0.4.1",
     "com.github.scala-incubator.io" % "scala-io-file_2.10.0-RC1" % "0.4.1",
     "joda-time" % "joda-time" % "2.1",
+    "fr.greweb" %% "playcli" % "0.1",
     "com.typesafe" %% "play-plugins-mailer" % "2.1.0"
   )
 
