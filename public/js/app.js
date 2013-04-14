@@ -62,8 +62,8 @@ function loadTop10() {
 	});
 }
 
-function loadPlayer(path, quality, destination) {
-	$.get("/api/videoPlayer/"+quality+"/"+path, function(player) {
+function loadPlayer(path, destination) {
+	$.get("/api/videoPlayer/"+path, function(player) {
 		$(destination).html(player);
 	});
 }
@@ -83,16 +83,9 @@ function addFile($base, e) {
 	html += getIcone(e);
 	html += "</td>";
 
+  var vid_eId = Math.floor(Math.random()*100000);
 	html += "<td>";
-html += "    <div class='btn-group'>"+
-"        <a class='dropdown-toggle icon-play' data-toggle='dropdown' href='#'>"+
-"        </a>"+
-"        <ul class='dropdown-menu' data-link='"+e.path+"'>"+
-"            <li><a class='preview' data-quality='vga'>vga</a></li>"+
-"            <li><a class='preview' data-quality='wvga'>wvga</a></li>"+
-"            <li><a class='preview' data-quality='hd720'>hd720</a></li>"+
-"        </ul>"+
-"    </div>";
+  html += "<a class='preview icon-play' href='#"+vid_eId+"' data-destid='"+vid_eId+"' data-link='"+e.path+"'></a>";
 	html += "</td>";
 
 	// Nom
@@ -101,6 +94,7 @@ html += "    <div class='btn-group'>"+
 	if (e.details.year) {
 		html += " (<strong>"+e.details.year+"</strong>)";
 	}
+  html +='<div id="'+vid_eId+'" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>';
 	html += "</td>";
 	
 	// Série
@@ -186,11 +180,11 @@ function initOpenDirAction() {
 	});
 	$("#list-body").on('click', ".preview", function(e) {
         e.preventDefault();
-        var dir = "/"+$(this).parent().parent().data("link");
-        var quality = $(this).data("quality");
-        var eId = Math.floor(Math.random()*100000);
-        $(this).parent().parent().parent().parent().next().append("<div id='"+eId+"'></div>");
-        loadPlayer(dir, quality, $("#"+eId));
+        var dir = "/"+$(this).data("link");
+        var vid_eId = $(this).data("destid");
+        $("#"+vid_eId).modal('show');
+        $("#"+vid_eId).on('hidden', {eId: vid_eId}, function(x) {$("#"+x.data.eId).html('')});
+        loadPlayer(dir, $("#"+$(this).data("destid")));
     });
 }
 
