@@ -1,0 +1,22 @@
+
+<script id="tpl_controls" type="text/template" >
+  <div class="play-button">
+    <a href="#" class="play-action"><i class="icon-play icon-white"></i></a>
+  </div>
+  <div class="player-timeline-container">
+    <div id="{{id}}" class="player-timeline">
+      <div class="player-timeline-read"></div>
+      <div class="player-timeline-loaded"></div>
+    </div>
+  </div>
+  <div class="dropdown-toggle quality-switcher" data-toggle="dropdown">
+    <a href="#"><i class="icon-cog icon-white"></i></a>
+  </div>
+  <div class="dropdown-menu qualities">
+    <ul>
+      {{#qualities}}
+        <li><a class="sw-quality" data-quality="{{id}}">{{name}}</a></li>
+      {{/qualities}}
+    </ul>
+  </div>
+</script>

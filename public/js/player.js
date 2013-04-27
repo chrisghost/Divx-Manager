@@ -8,31 +8,31 @@ Player = {
       path : _path,
       formats: _formats,
       quality: _quality,
-      seeked: 0
+      seeked: 0,
+      video_id: "video"
     };
     this.createTimeline();
     this.seek(0);
   },
   createTimeline: function() {
     var id = "player-timeline-"+Date.now();
-    $(s.elem).html('<div class="play-button"><a href="#" class="play-action"><i class="icon-play icon-white"></i></a></div>'+
-      '<div class="player-timeline-container">'+
-      '<div id="'+id+'" class="player-timeline">'+
-      '<div class="player-timeline-read"></div>'+
-      '</div>'+
-      '</div>'+
-      "        <div class='dropdown-toggle quality-switcher' data-toggle='dropdown'><a href='#'><i class='icon-cog icon-white'></i>"+
-      "        </a></div>"+
-      "        <div class='dropdown-menu qualities'><ul>"+
-      "            <li><a class='sw-quality' data-quality='vga'>vga</a></li>"+
-      "            <li><a class='sw-quality' data-quality='hd720'>hd720</a></li>"+
-      "        </ul></div>");
+
+    var timelinedata =
+      {
+        "id": id,
+        "qualities": [{ "id": "qqvga", "name": "120p"},
+                      { "id": "qvga", "name": "240p"},
+                      { "id": "vga", "name": "480p"},
+                      { "id": "hd720", "name": "720p"}]
+      };
+
+    $(s.elem).html(Mustache.render($("#tpl_controls").html(),timelinedata));
+
     $("#"+id).on('click', {that: this}, function(e){
       e.data.that.seek(Math.floor(((e.pageX-$(s.elem).offset().left)/$(s.elem).width())*s.length))
     });
-    $(".play-action").on('click', {that: this, setts : s}, function(e){ a.data.that.togglePlay()});
+    $(".play-action").on('click', {that: this, setts : s}, function(e){ e.data.that.togglePlay()});
     $(".sw-quality").on('click', {that: this, setts : s}, function(e){
-      console.log(e);
       e.data.setts.quality=$(e.currentTarget).data("quality");
       e.data.that.seek(e.data.setts.seeked)});
   },
@@ -61,14 +61,15 @@ Player = {
         contHtml += '<source src="/api/preview/'+s.formats[i]+'/'+s.quality+'/'+pos+'/'+s.path+'" type="video/'+s.formats[i]+'" />';
     }
         '</video>';
-    document.getElementById(s.video).innerHTML = contHtml;
-    $("#video").on("timeupdate", this.updateTimeline);
-    $("#video").on("loadeddata", this.updateContainer);
-    $("#video").on("pause", function(){
+    gbi(s.video).innerHTML = contHtml;
+    gbi(s.video_id).addEventListener("timeupdate", this.updateTimeline);
+    gbi(s.video_id).addEventListener("timeupdate", this.updateBuffered);
+    gbi(s.video_id).addEventListener("loadeddata", this.updateContainer);
+    gbi(s.video_id).addEventListener("pause", function(){
         $(".play-button a i").addClass("icon-play");
         $(".play-button a i").removeClass("icon-pause");
     });
-    $("#video").on("play", function(){
+    gbi(s.video_id).addEventListener("play", function(){
         $(".play-button a i").removeClass("icon-play");
         $(".play-button a i").addClass("icon-pause");
     });
@@ -80,10 +81,12 @@ Player = {
   },
 
   updateContainer: function() {
-    $(s.elem).parent().parent().css({  "width": $("#video").width(),
-                                        "height": $("#video").height(),
-                              "margin-left": -$("#video").width()/2});
-    $(".qualities").css({"margin-left":$("#video").width()-60});
-    $(".player-timeline-container").css({"width":$("#video").width()-$(".play-button").outerWidth()-$(".quality-switcher").outerWidth()});
+    $(s.elem).parent().parent().css({  "width": $("#"+s.video_id).width(),
+                                        "height": $("#"+s.video_id).height(),
+                              "margin-left": -$("#"+s.video_id).width()/2});
+    $(".qualities").css({"margin-left":$("#"+s.video_id).width()-60});
+    $(".player-timeline-container").css({"width":$("#"+s.video_id).width()-$(".play-button").outerWidth()-$(".quality-switcher").outerWidth()});
   }
 }
+
+function gbi(id) { return document.getElementById(id); }
